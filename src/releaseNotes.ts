@@ -85,9 +85,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         improved: ['Navigation tree now shows AND/OR icons when multiselecting tags and properties (command or shift + command).'],
         changed: [],
-        fixed: [
-            'Fixed getting stuck in list pane in single pane mode when multi-selecting tags or properties in navigation pane.'
-        ]
+        fixed: ['Fixed getting stuck in list pane in single pane mode when multi-selecting tags or properties in navigation pane.']
     },
     {
         version: '2.5.8',

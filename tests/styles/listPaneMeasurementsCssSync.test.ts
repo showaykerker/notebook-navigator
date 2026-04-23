@@ -137,4 +137,13 @@ describe('List pane measurements stay in sync with CSS', () => {
         expect(previewRule).not.toMatch(/(^|\n)\s*min-height\s*:/m);
         expect(previewRule).not.toMatch(/(^|\n)\s*height\s*:/m);
     });
+
+    test('preview flex behavior keeps empty multi-line previews from adding vertical spacer height', () => {
+        const listFilesCss = readTextFile('src/styles/sections/list-files.css');
+        const multiLinePreviewRule = extractRuleBlock(listFilesCss, '.nn-file-preview:not(.nn-file-second-line .nn-file-preview)');
+        const secondLinePreviewRule = extractRuleBlock(listFilesCss, '.nn-file-second-line .nn-file-preview');
+
+        expect(multiLinePreviewRule).toMatch(/(^|\n)\s*flex:\s*0 0 auto\s*;/m);
+        expect(secondLinePreviewRule).toMatch(/(^|\n)\s*flex:\s*1\s*;/m);
+    });
 });
