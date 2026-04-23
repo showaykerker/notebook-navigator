@@ -441,8 +441,7 @@ export function useListPaneScroll({
                 textContentHeight += heights.tagRowHeight * propertyRowCount;
             }
 
-            // Keep the estimated text area at least as tall as the feature image area in normal mode.
-            // This mirrors the rendered row floor when thumbnails are shown beside short text blocks.
+            // Keep the estimated text area at least as tall as the shared thumbnail floor in normal mode.
             if (!isCompactMode && textContentHeight < heights.featureImageHeight) {
                 textContentHeight = heights.featureImageHeight;
             }
