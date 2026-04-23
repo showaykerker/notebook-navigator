@@ -1493,7 +1493,7 @@ export const STRINGS_ZH_TW = {
             },
             showFileProperties: {
                 name: '顯示檔案屬性',
-                desc: '在檔案項目中顯示可點擊的屬性。'
+                desc: '在檔案項目中顯示屬性。使用「屬性鍵可見性」對話框選擇要顯示的屬性。'
             },
             colorFileProperties: {
                 name: '為檔案屬性著色',

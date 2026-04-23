@@ -1493,7 +1493,7 @@ export const STRINGS_ZH_CN = {
             },
             showFileProperties: {
                 name: '显示文件属性',
-                desc: '在文件项中显示可点击的属性。'
+                desc: '在文件项中显示属性。使用"属性键可见性"对话框选择要显示的属性。'
             },
             colorFileProperties: {
                 name: '为文件属性着色',

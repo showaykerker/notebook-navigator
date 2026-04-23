@@ -1500,7 +1500,7 @@ export const STRINGS_TR = {
             },
             showFileProperties: {
                 name: 'Dosya özelliklerini göster',
-                desc: 'Dosya öğelerinde tıklanabilir özellikleri görüntüle.'
+                desc: 'Dosya öğelerinde özellikleri görüntüle. Gösterilecek özellikleri seçmek için "Özellik anahtarı görünürlüğü" iletişim kutusunu kullanın.'
             },
             colorFileProperties: {
                 name: 'Dosya özelliklerini renklendir',

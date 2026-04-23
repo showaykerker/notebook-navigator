@@ -1501,7 +1501,7 @@ export const STRINGS_VI = {
             },
             showFileProperties: {
                 name: 'Hiện thuộc tính tệp',
-                desc: 'Hiển thị các thuộc tính có thể nhấp trong mục tệp.'
+                desc: 'Hiển thị các thuộc tính trong mục tệp. Dùng hộp thoại "Hiển thị khóa thuộc tính" để chọn thuộc tính nào được hiển thị.'
             },
             colorFileProperties: {
                 name: 'Tô màu thuộc tính tệp',

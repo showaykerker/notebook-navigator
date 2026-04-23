@@ -1503,7 +1503,7 @@ export const STRINGS_NL = {
             },
             showFileProperties: {
                 name: 'Bestandseigenschappen tonen',
-                desc: 'Klikbare eigenschappen weergeven in bestandsitems.'
+                desc: 'Eigenschappen weergeven in bestandsitems. Gebruik het dialoogvenster "Zichtbaarheid van eigenschapssleutels" om te kiezen welke eigenschappen worden getoond.'
             },
             colorFileProperties: {
                 name: 'Bestandseigenschappen kleuren',

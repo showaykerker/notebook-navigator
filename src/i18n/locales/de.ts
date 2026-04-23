@@ -1504,7 +1504,7 @@ export const STRINGS_DE = {
             },
             showFileProperties: {
                 name: 'Datei-Eigenschaften anzeigen',
-                desc: 'Klickbare Eigenschaften in Datei-Elementen anzeigen.'
+                desc: 'Eigenschaften in Datei-Elementen anzeigen. Wähle im Dialog "Sichtbarkeit der Eigenschaftsschlüssel" aus, welche Eigenschaften angezeigt werden.'
             },
             colorFileProperties: {
                 name: 'Datei-Eigenschaften einfärben',

@@ -1504,7 +1504,7 @@ export const STRINGS_PL = {
             },
             showFileProperties: {
                 name: 'Pokaż atrybuty plików',
-                desc: 'Wyświetl klikalne atrybuty w elementach plików.'
+                desc: 'Wyświetl atrybuty w elementach plików. Użyj okna „Widoczność kluczy atrybutów", aby wybrać, które atrybuty są pokazywane.'
             },
             colorFileProperties: {
                 name: 'Koloruj atrybuty plików',

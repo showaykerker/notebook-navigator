@@ -1501,7 +1501,7 @@ export const STRINGS_ID = {
             },
             showFileProperties: {
                 name: 'Tampilkan properti file',
-                desc: 'Tampilkan properti yang dapat diklik di item file.'
+                desc: 'Tampilkan properti di item file. Gunakan dialog visibilitas kunci properti untuk memilih properti yang ditampilkan.'
             },
             colorFileProperties: {
                 name: 'Warnai properti file',

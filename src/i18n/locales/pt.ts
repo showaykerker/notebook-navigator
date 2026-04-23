@@ -1503,7 +1503,7 @@ export const STRINGS_PT = {
             },
             showFileProperties: {
                 name: 'Mostrar propriedades de ficheiros',
-                desc: 'Exibir propriedades clicáveis nos itens de ficheiro.'
+                desc: 'Exibir propriedades nos itens de ficheiro. Usa o diálogo "Visibilidade das chaves de propriedade" para escolher que propriedades são mostradas.'
             },
             colorFileProperties: {
                 name: 'Colorir propriedades de ficheiros',

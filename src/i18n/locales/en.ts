@@ -1496,7 +1496,7 @@ export const STRINGS_EN = {
             },
             showFileProperties: {
                 name: 'Show file properties',
-                desc: 'Display clickable properties in file items.'
+                desc: 'Display properties on file items. Use the property key visibility modal to choose which properties are shown.'
             },
             colorFileProperties: {
                 name: 'Color file properties',

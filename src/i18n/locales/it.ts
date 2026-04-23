@@ -1500,7 +1500,7 @@ export const STRINGS_IT = {
             },
             showFileProperties: {
                 name: 'Mostra proprietà file',
-                desc: 'Visualizza le proprietà cliccabili negli elementi file.'
+                desc: 'Visualizza le proprietà negli elementi file. Usa la finestra "Visibilità chiavi proprietà" per scegliere quali proprietà mostrare.'
             },
             colorFileProperties: {
                 name: 'Colora proprietà file',

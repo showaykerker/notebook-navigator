@@ -1500,7 +1500,7 @@ export const STRINGS_JA = {
             },
             showFileProperties: {
                 name: 'ファイルプロパティを表示',
-                desc: 'ファイル項目にクリック可能なプロパティを表示します。'
+                desc: 'ファイル項目にプロパティを表示します。「プロパティキーの表示設定」ダイアログで表示するプロパティを選択してください。'
             },
             colorFileProperties: {
                 name: 'ファイルプロパティに色を付ける',

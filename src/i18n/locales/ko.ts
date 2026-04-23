@@ -1499,7 +1499,7 @@ export const STRINGS_KO = {
             },
             showFileProperties: {
                 name: '파일 속성 표시',
-                desc: '파일 항목에 클릭 가능한 속성을 표시합니다.'
+                desc: '파일 항목에 속성을 표시합니다. "속성 키 표시 설정" 대화상자에서 표시할 속성을 선택하세요.'
             },
             colorFileProperties: {
                 name: '파일 속성에 색상 적용',
