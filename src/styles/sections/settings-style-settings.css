@@ -407,6 +407,16 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
+        id: nn-theme-calendar-day-active-border-width
+        title: Active day outline thickness
+        description: Border width for the outline shown on the active day in the calendar.
+        type: variable-number-slider
+        default: 3
+        format: px
+        min: 1
+        max: 4
+        step: 1
+    -
         id: nn-nav-pane-heading
         title: Navigation pane (folders, tags, shortcuts)
         description: Customize the background and items within the navigation pane.

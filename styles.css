@@ -202,6 +202,7 @@ body {
     --nn-theme-calendar-day-today-color: var(--nn-theme-calendar-day-in-month-color);
     --nn-theme-calendar-day-today-bg: var(--text-selection);
     --nn-theme-calendar-day-active-border-color: #f94040;
+    --nn-theme-calendar-day-active-border-width: 3px;
 
     /* -- Folder & Tag Items -- */
     --nn-theme-navitem-chevron-color: var(--nn-theme-foreground-muted);
@@ -2501,6 +2502,7 @@ body {
     --nn-calendar-note-indicator-color: var(--nn-theme-calendar-note-indicator-color);
     --nn-calendar-task-indicator-color: var(--nn-theme-calendar-unfinished-task-indicator-color);
     --nn-calendar-active-editor-border-color: var(--nn-theme-calendar-day-active-border-color);
+    --nn-calendar-active-editor-border-width: var(--nn-theme-calendar-day-active-border-width);
 }
 
 .notebook-navigator-mobile :is(.nn-navigation-pane, .nn-list-pane, .nn-single-pane-calendar) {
@@ -2638,7 +2640,9 @@ body {
     background: var(--nn-calendar-header-chip-bg) !important;
     color: var(--nn-theme-calendar-header-color);
     font: inherit;
-    padding: 2px 1px;
+    box-sizing: border-box;
+    height: var(--nn-calendar-today-height);
+    padding: 0 1px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -2961,7 +2965,7 @@ body {
     position: absolute;
     inset: 0;
     box-sizing: border-box;
-    border: 3px solid var(--nn-calendar-active-editor-border-color);
+    border: var(--nn-calendar-active-editor-border-width) solid var(--nn-calendar-active-editor-border-color);
     border-radius: inherit;
     pointer-events: none;
     z-index: 2;
@@ -8484,6 +8488,16 @@ settings:
         format: rgb
         default-light: '#'
         default-dark: '#'
+    -
+        id: nn-theme-calendar-day-active-border-width
+        title: Active day outline thickness
+        description: Border width for the outline shown on the active day in the calendar.
+        type: variable-number-slider
+        default: 3
+        format: px
+        min: 1
+        max: 4
+        step: 1
     -
         id: nn-nav-pane-heading
         title: Navigation pane (folders, tags, shortcuts)

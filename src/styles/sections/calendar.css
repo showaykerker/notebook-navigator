@@ -48,6 +48,7 @@
     --nn-calendar-note-indicator-color: var(--nn-theme-calendar-note-indicator-color);
     --nn-calendar-task-indicator-color: var(--nn-theme-calendar-unfinished-task-indicator-color);
     --nn-calendar-active-editor-border-color: var(--nn-theme-calendar-day-active-border-color);
+    --nn-calendar-active-editor-border-width: var(--nn-theme-calendar-day-active-border-width);
 }
 
 .notebook-navigator-mobile :is(.nn-navigation-pane, .nn-list-pane, .nn-single-pane-calendar) {
@@ -185,7 +186,9 @@
     background: var(--nn-calendar-header-chip-bg) !important;
     color: var(--nn-theme-calendar-header-color);
     font: inherit;
-    padding: 2px 1px;
+    box-sizing: border-box;
+    height: var(--nn-calendar-today-height);
+    padding: 0 1px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -508,7 +511,7 @@
     position: absolute;
     inset: 0;
     box-sizing: border-box;
-    border: 3px solid var(--nn-calendar-active-editor-border-color);
+    border: var(--nn-calendar-active-editor-border-width) solid var(--nn-calendar-active-editor-border-color);
     border-radius: inherit;
     pointer-events: none;
     z-index: 2;

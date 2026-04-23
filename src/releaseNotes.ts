@@ -81,7 +81,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-04-25',
         showOnUpdate: true,
         new: [
-            'Variable line height for title and preview text in list pane. If you chooose 3 lines for title or preview, notes will display without spacing with variable lines.'
+            'Variable line height for title and preview text in list pane. If you chooose 3 lines for title or preview, notes will display without spacing with variable lines.',
+            'New style setting: Calendar > ==Active day outline thickness==.'
         ],
         improved: ['Navigation tree now shows AND/OR icons when multiselecting tags and properties (command or shift + command).'],
         changed: [],

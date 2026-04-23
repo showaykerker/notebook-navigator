@@ -1050,10 +1050,20 @@ export function Calendar({
         if (!momentApi) {
             return;
         }
+
+        const today = momentApi().startOf('day').locale(displayLocale);
+
         clearHoverTooltip();
-        setCursorDate(momentApi().startOf('day').locale(displayLocale));
+        setCursorDate(today.clone());
         onNavigationAction?.();
-    }, [clearHoverTooltip, displayLocale, momentApi, onNavigationAction]);
+
+        const existingFile = getExistingDayNoteFile(today);
+        if (!existingFile) {
+            return;
+        }
+
+        openOrCreateDailyNote(today, existingFile);
+    }, [clearHoverTooltip, displayLocale, getExistingDayNoteFile, momentApi, onNavigationAction, openOrCreateDailyNote]);
 
     const showWeekNumbers = settings.calendarShowWeekNumber;
     const highlightToday = settings.calendarHighlightToday;

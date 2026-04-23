@@ -76,6 +76,7 @@ Most variables are colors and should resolve to a computed color (some are used 
 | `--nn-theme-calendar-day-today-color`         | `var(--nn-theme-calendar-day-in-month-color)` | Text color for today's date                |
 | `--nn-theme-calendar-day-today-bg`            | `var(--text-selection)`                | Background color for today's date highlight     |
 | `--nn-theme-calendar-day-active-border-color` | `#f94040` | Border color for the outline shown on the active day in the calendar |
+| `--nn-theme-calendar-day-active-border-width` | `3px` | Border width for the outline shown on the active day in the calendar |
 
 ### Navigation pane
 
