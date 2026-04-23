@@ -59,9 +59,11 @@ import { TagTreeNode } from '../types/storage';
 import type { NoteCountInfo } from '../types/noteCounts';
 import { buildNoteCountDisplay, buildSortableNoteCountDisplay } from '../utils/noteCountFormatting';
 import { buildSearchMatchContentClass } from '../utils/searchHighlight';
+import type { InclusionOperator } from '../utils/filterSearch';
 import { getTotalNoteCount } from '../utils/tagTree';
 import { resolveUXIcon } from '../utils/uxIcons';
 import { IndentGuideColumns } from './IndentGuideColumns';
+import { ObsidianIcon } from './ObsidianIcon';
 
 /**
  * Props for the TagTreeItem component
@@ -97,6 +99,8 @@ interface TagTreeItemProps {
     isHidden?: boolean;
     /** Indicates if the tag is referenced by the active search query */
     searchMatch?: 'include' | 'exclude';
+    /** Logical operator that connects this tag to the previous include in search expression mode */
+    inclusionOperator?: InclusionOperator;
     /** Enables drag and drop for tag reordering */
     isDraggable: boolean;
 }
@@ -124,6 +128,7 @@ export const TagTreeItem = React.memo(
             backgroundColor,
             icon,
             searchMatch,
+            inclusionOperator,
             isDraggable
         },
         ref
@@ -168,6 +173,9 @@ export const TagTreeItem = React.memo(
         const noteCountLabel = noteCountDisplay.label;
         // Render count badge when enabled and there is either a count or a sort override indicator
         const shouldDisplayCount = showFileCount && noteCountDisplay.shouldDisplay;
+        const operatorIconName =
+            inclusionOperator === 'OR' ? 'lucide-squares-unite' : inclusionOperator === 'AND' ? 'lucide-squares-intersect' : null;
+        const shouldDisplayOperatorIndicator = searchMatch === 'include' && operatorIconName !== null;
 
         // Memoize computed values
         const hasChildren = useMemo(() => tagNode.children.size > 0, [tagNode.children.size]);
@@ -315,7 +323,13 @@ export const TagTreeItem = React.memo(
                         {tagNode.name}
                     </span>
                     <span className="nn-navitem-spacer" />
-                    {shouldDisplayCount && <span className="nn-navitem-count">{noteCountLabel}</span>}
+                    {shouldDisplayOperatorIndicator ? (
+                        <span className="nn-navitem-count nn-navitem-operator-indicator" data-operator={inclusionOperator}>
+                            <ObsidianIcon name={operatorIconName} className="nn-navitem-operator-icon" aria-hidden={true} />
+                        </span>
+                    ) : shouldDisplayCount ? (
+                        <span className="nn-navitem-count">{noteCountLabel}</span>
+                    ) : null}
                 </div>
             </div>
         );

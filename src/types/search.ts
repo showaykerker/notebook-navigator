@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import type { InclusionOperator } from '../utils/filterSearchTypes';
+
 /**
  * Search providers supported by Notebook Navigator.
  */
@@ -44,10 +46,13 @@ export interface SearchResultMeta {
  * Captures navigation-related filters derived from the search query.
  * Used to highlight matching tags and properties inside the navigation tree.
  */
+export type SearchNavInclusionOperatorMap = Record<string, InclusionOperator>;
+
 export interface SearchNavFilterState {
     tags: {
         include: string[];
         exclude: string[];
+        includeOperators: SearchNavInclusionOperatorMap;
         excludeTagged: boolean;
         includeUntagged: boolean;
         requireTagged: boolean;
@@ -55,6 +60,7 @@ export interface SearchNavFilterState {
     properties: {
         include: string[];
         exclude: string[];
+        includeOperators: SearchNavInclusionOperatorMap;
     };
 }
 
@@ -62,12 +68,14 @@ export const EMPTY_SEARCH_NAV_FILTER_STATE: SearchNavFilterState = {
     tags: {
         include: [],
         exclude: [],
+        includeOperators: {},
         excludeTagged: false,
         includeUntagged: false,
         requireTagged: false
     },
     properties: {
         include: [],
-        exclude: []
+        exclude: [],
+        includeOperators: {}
     }
 };

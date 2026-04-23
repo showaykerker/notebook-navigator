@@ -19,8 +19,9 @@
 import { isDateFilterCandidate, parseDateFilterRange } from './filterSearchDate';
 import { evaluateTagExpression, parseTagModeTokens, propertyTokenMatches, tagMatchesToken } from './filterSearchExpression';
 import type { DateFilterRange, FilterSearchTokens, FolderFilterToken, InclusionOperator, PropertySearchToken } from './filterSearchTypes';
+import { EMPTY_SEARCH_NAV_FILTER_STATE, type SearchNavFilterState } from '../types/search';
 import { casefold, foldSearchText, foldSearchTextFromLowercase } from './recordUtils';
-import { normalizePropertyTreeValuePath } from './propertyTree';
+import { buildPropertyKeyNodeId, buildPropertyValueNodeId, normalizePropertyTreeValuePath } from './propertyTree';
 
 export { DATE_FILTER_RELATIVE_KEYWORDS, fileMatchesDateFilterTokens, parseDateFieldPrefix } from './filterSearchDate';
 export type { FilterMode, FilterSearchTokens, FolderFilterToken, InclusionOperator, PropertySearchToken } from './filterSearchTypes';
@@ -871,6 +872,97 @@ export function parseFilterSearchTokens(query: string): FilterSearchTokens {
     }
 
     return parseFilterModeTokens(classifiedTokens, excludeTagTokens, excludePropertyTokens, hasUntaggedOperand);
+}
+
+const isSearchNavOperandToken = (
+    token: ClassifiedToken
+): token is Extract<ClassifiedToken, { kind: 'tag' | 'tagNegation' | 'property' | 'propertyNegation' }> => {
+    return token.kind === 'tag' || token.kind === 'tagNegation' || token.kind === 'property' || token.kind === 'propertyNegation';
+};
+
+const buildSearchNavPropertyNodeId = (token: PropertySearchToken): string => {
+    return token.value === null ? buildPropertyKeyNodeId(token.key) : buildPropertyValueNodeId(token.key, token.value);
+};
+
+/**
+ * Builds the navigation highlight state for the active search query.
+ * Include operators are only tracked for tag-mode expressions where AND/OR act as connectors.
+ */
+export function buildSearchNavFilterState(query: string): SearchNavFilterState {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+        return EMPTY_SEARCH_NAV_FILTER_STATE;
+    }
+
+    const tokens = parseFilterSearchTokens(trimmedQuery);
+    const tagIncludeSet = new Set<string>();
+    const tagExcludeSet = new Set<string>();
+    const propertyIncludeSet = new Set<string>();
+    const propertyExcludeSet = new Set<string>();
+
+    tokens.includedTagTokens.forEach(token => {
+        if (token) {
+            tagIncludeSet.add(token);
+        }
+    });
+    tokens.excludeTagTokens.forEach(token => {
+        if (token) {
+            tagExcludeSet.add(token);
+        }
+    });
+    tokens.propertyTokens.forEach(token => {
+        propertyIncludeSet.add(buildSearchNavPropertyNodeId(token));
+    });
+    tokens.excludePropertyTokens.forEach(token => {
+        propertyExcludeSet.add(buildSearchNavPropertyNodeId(token));
+    });
+
+    const tagIncludeOperators: Record<string, InclusionOperator> = {};
+    const propertyIncludeOperators: Record<string, InclusionOperator> = {};
+
+    if (tokens.mode === 'tag') {
+        const rawTokens = tokenizeFilterSearchQuery(trimmedQuery).filter(Boolean);
+        const classification = classifyRawTokens(rawTokens);
+        let hasPriorOperand = false;
+        let pendingOperator: InclusionOperator | null = null;
+
+        for (const token of classification.tokens) {
+            if (token.kind === 'operator') {
+                pendingOperator = token.operator;
+                continue;
+            }
+
+            if (!isSearchNavOperandToken(token)) {
+                continue;
+            }
+
+            const operator = hasPriorOperand ? (pendingOperator ?? 'AND') : null;
+            if (token.kind === 'tag' && token.value && operator) {
+                tagIncludeOperators[token.value] = operator;
+            } else if (token.kind === 'property' && operator) {
+                propertyIncludeOperators[buildSearchNavPropertyNodeId(token.value)] = operator;
+            }
+
+            hasPriorOperand = true;
+            pendingOperator = null;
+        }
+    }
+
+    return {
+        tags: {
+            include: Array.from(tagIncludeSet),
+            exclude: Array.from(tagExcludeSet),
+            includeOperators: tagIncludeOperators,
+            excludeTagged: tokens.excludeTagged,
+            includeUntagged: tokens.includeUntagged,
+            requireTagged: tokens.requireTagged
+        },
+        properties: {
+            include: Array.from(propertyIncludeSet),
+            exclude: Array.from(propertyExcludeSet),
+            includeOperators: propertyIncludeOperators
+        }
+    };
 }
 
 // Checks if a token is a recognized connector word

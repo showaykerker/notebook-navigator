@@ -17,11 +17,13 @@
  */
 import { describe, it, expect } from 'vitest';
 import {
+    buildSearchNavFilterState,
     parseFilterSearchTokens,
     fileMatchesDateFilterTokens,
     fileMatchesFilterTokens,
     updateFilterQueryWithTag
 } from '../../src/utils/filterSearch';
+import { buildPropertyValueNodeId } from '../../src/utils/propertyTree';
 import { foldSearchText } from '../../src/utils/recordUtils';
 
 const sortTokens = (values: string[]) => [...values].sort();
@@ -537,6 +539,29 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.hasInclusions).toBe(false);
         expect(tokens.folderTokens).toEqual([]);
         expect(tokens.excludeFolderTokens).toEqual([]);
+    });
+});
+
+describe('buildSearchNavFilterState', () => {
+    it('tracks implicit and explicit operators for included tags', () => {
+        const state = buildSearchNavFilterState('#alpha #beta OR #gamma');
+
+        expect(state.tags.include).toEqual(['alpha', 'beta', 'gamma']);
+        expect(state.tags.includeOperators).toEqual({
+            beta: 'AND',
+            gamma: 'OR'
+        });
+        expect(state.properties.includeOperators).toEqual({});
+    });
+
+    it('tracks operators for included properties in expression mode', () => {
+        const state = buildSearchNavFilterState('#alpha AND .status=started OR .status=finished');
+
+        expect(state.tags.includeOperators).toEqual({});
+        expect(state.properties.includeOperators).toEqual({
+            [buildPropertyValueNodeId('status', 'started')]: 'AND',
+            [buildPropertyValueNodeId('status', 'finished')]: 'OR'
+        });
     });
 });
 

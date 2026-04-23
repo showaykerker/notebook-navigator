@@ -98,6 +98,26 @@ const arraysEqual = (a: string[], b: string[]): boolean => {
     return true;
 };
 
+const stringRecordEqual = (a: Record<string, string>, b: Record<string, string>): boolean => {
+    if (a === b) {
+        return true;
+    }
+
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) {
+        return false;
+    }
+
+    for (const key of aKeys) {
+        if (a[key] !== b[key]) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 interface ResolvedSelectionHistoryTarget {
     entry: SelectionHistoryEntry;
     index: number;
@@ -254,8 +274,10 @@ export const NotebookNavigatorComponent = React.memo(
                     prev.tags.requireTagged === next.tags.requireTagged &&
                     arraysEqual(prev.tags.include, next.tags.include) &&
                     arraysEqual(prev.tags.exclude, next.tags.exclude) &&
+                    stringRecordEqual(prev.tags.includeOperators, next.tags.includeOperators) &&
                     arraysEqual(prev.properties.include, next.properties.include) &&
-                    arraysEqual(prev.properties.exclude, next.properties.exclude)
+                    arraysEqual(prev.properties.exclude, next.properties.exclude) &&
+                    stringRecordEqual(prev.properties.includeOperators, next.properties.includeOperators)
                 ) {
                     return prev;
                 }
@@ -264,13 +286,15 @@ export const NotebookNavigatorComponent = React.memo(
                     tags: {
                         include: next.tags.include.slice(),
                         exclude: next.tags.exclude.slice(),
+                        includeOperators: { ...next.tags.includeOperators },
                         excludeTagged: next.tags.excludeTagged,
                         includeUntagged: next.tags.includeUntagged,
                         requireTagged: next.tags.requireTagged
                     },
                     properties: {
                         include: next.properties.include.slice(),
-                        exclude: next.properties.exclude.slice()
+                        exclude: next.properties.exclude.slice(),
+                        includeOperators: { ...next.properties.includeOperators }
                     }
                 };
             });

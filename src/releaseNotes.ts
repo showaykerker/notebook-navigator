@@ -83,10 +83,10 @@ const RELEASE_NOTES: ReleaseNote[] = [
         new: [
             'Variable line height for title and preview text in list pane. If you chooose 3 lines for title or preview, notes will display without spacing with variable lines.'
         ],
-        improved: [],
+        improved: ['Navigation tree now shows AND/OR icons when multiselecting tags and properties (command or shift + command).'],
         changed: [],
         fixed: [
-            'Fixed getting stuck in list pane in single pane mode when multi-selecting tags, properties, or date filters from navigation.'
+            'Fixed getting stuck in list pane in single pane mode when multi-selecting tags or properties in navigation pane.'
         ]
     },
     {

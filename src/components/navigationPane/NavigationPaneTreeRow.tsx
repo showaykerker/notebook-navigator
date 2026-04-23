@@ -225,6 +225,7 @@ export function NavigationPaneTreeRow({ item, context }: NavigationPaneRowProps)
             const tagNode = item.data;
             const indentGuideLevels = indentGuideLevelsByKey.get(item.key);
             const searchMatch = searchHighlights.getTagSearchMatch(tagNode.path);
+            const inclusionOperator = searchMatch === 'include' ? searchHighlights.getTagInclusionOperator(tagNode.path) : undefined;
 
             return (
                 <TagTreeItem
@@ -240,6 +241,7 @@ export function NavigationPaneTreeRow({ item, context }: NavigationPaneRowProps)
                     backgroundColor={getSolidBackground(item.backgroundColor)}
                     icon={item.icon}
                     searchMatch={searchMatch}
+                    inclusionOperator={inclusionOperator}
                     isDraggable={!isMobile && tagNode.path !== UNTAGGED_TAG_ID && tagNode.path !== TAGGED_TAG_ID}
                     onToggleAllSiblings={() => {
                         const isCurrentlyExpanded = expansionState.expandedTags.has(tagNode.path);
@@ -265,6 +267,8 @@ export function NavigationPaneTreeRow({ item, context }: NavigationPaneRowProps)
             const indentGuideLevels = indentGuideLevelsByKey.get(item.key);
             const selectedPropertyNodeId = selectionState.selectionType === ItemType.PROPERTY ? selectionState.selectedProperty : null;
             const searchMatch = searchHighlights.getPropertySearchMatch(propertyNode.id);
+            const inclusionOperator =
+                searchMatch === 'include' ? searchHighlights.getPropertyInclusionOperator(propertyNode.id) : undefined;
 
             return (
                 <PropertyTreeItem
@@ -291,6 +295,7 @@ export function NavigationPaneTreeRow({ item, context }: NavigationPaneRowProps)
                     backgroundColor={getSolidBackground(item.backgroundColor)}
                     icon={item.icon}
                     searchMatch={searchMatch}
+                    inclusionOperator={inclusionOperator}
                     isDraggable={!isMobile}
                     countInfo={propertyCounts.get(propertyNode.id)}
                     showFileCount={settings.showNoteCount}

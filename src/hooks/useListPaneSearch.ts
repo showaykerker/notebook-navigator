@@ -38,6 +38,7 @@ import {
 import { EMPTY_SEARCH_NAV_FILTER_STATE, type SearchNavFilterState, type SearchProvider } from '../types/search';
 import { focusElementPreventScroll } from '../utils/domUtils';
 import {
+    buildSearchNavFilterState,
     parseFilterSearchTokens,
     updateFilterQueryWithDateToken,
     updateFilterQueryWithProperty,
@@ -46,7 +47,7 @@ import {
 } from '../utils/filterSearch';
 import { showNotice } from '../utils/noticeUtils';
 import { normalizeOptionalVaultFolderPath } from '../utils/pathUtils';
-import { buildPropertyKeyNodeId, buildPropertyValueNodeId, parsePropertyNodeId } from '../utils/propertyTree';
+import { parsePropertyNodeId } from '../utils/propertyTree';
 import { normalizeTagPath } from '../utils/tagUtils';
 import type { FilterSearchTokens } from '../utils/filterSearch';
 import type { NavigateToFolderOptions, RevealPropertyOptions, RevealTagOptions } from './useNavigatorReveal';
@@ -251,62 +252,8 @@ export function useListPaneSearch({
             return;
         }
 
-        const trimmed = searchQuery.trim();
-        if (!trimmed) {
-            onSearchTokensChange(EMPTY_SEARCH_NAV_FILTER_STATE);
-            return;
-        }
-
-        const tokens = parseFilterSearchTokens(trimmed);
-        const includeSet = new Set<string>();
-        tokens.includedTagTokens.forEach(token => {
-            const normalized = normalizeTagPath(token);
-            if (normalized) {
-                includeSet.add(normalized);
-            }
-        });
-
-        const excludeSet = new Set<string>();
-        tokens.excludeTagTokens.forEach(token => {
-            const normalized = normalizeTagPath(token);
-            if (normalized) {
-                excludeSet.add(normalized);
-            }
-        });
-
-        const propertyIncludeSet = new Set<string>();
-        tokens.propertyTokens.forEach(token => {
-            if (token.value) {
-                propertyIncludeSet.add(buildPropertyValueNodeId(token.key, token.value));
-                return;
-            }
-
-            propertyIncludeSet.add(buildPropertyKeyNodeId(token.key));
-        });
-
-        const propertyExcludeSet = new Set<string>();
-        tokens.excludePropertyTokens.forEach(token => {
-            if (token.value) {
-                propertyExcludeSet.add(buildPropertyValueNodeId(token.key, token.value));
-                return;
-            }
-
-            propertyExcludeSet.add(buildPropertyKeyNodeId(token.key));
-        });
-
-        onSearchTokensChange({
-            tags: {
-                include: Array.from(includeSet),
-                exclude: Array.from(excludeSet),
-                excludeTagged: tokens.excludeTagged,
-                includeUntagged: tokens.includeUntagged,
-                requireTagged: tokens.requireTagged
-            },
-            properties: {
-                include: Array.from(propertyIncludeSet),
-                exclude: Array.from(propertyExcludeSet)
-            }
-        });
+        const nextState = searchQuery.trim() ? buildSearchNavFilterState(searchQuery) : EMPTY_SEARCH_NAV_FILTER_STATE;
+        onSearchTokensChange(nextState);
     }, [onSearchTokensChange, searchQuery]);
 
     const activeSearchShortcutStartTarget = useMemo<ShortcutStartTarget | undefined>(() => {
