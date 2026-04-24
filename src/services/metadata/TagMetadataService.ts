@@ -512,8 +512,10 @@ export class TagMetadataService extends BaseMetadataService {
         validators: CleanupValidators,
         targetSettings: NotebookNavigatorSettings = this.settingsProvider.settings
     ): Promise<boolean> {
-        // Only run if tags are enabled (tagTree is provided)
-        if (!validators.tagTree || validators.tagTree.size === 0) {
+        const hasProcessedTagData = validators.dbFiles.some(({ data }) => data.tags !== null);
+
+        // Skip destructive tag cleanup until cached tag data has been processed.
+        if (validators.tagTree.size === 0 && !hasProcessedTagData) {
             return false;
         }
 

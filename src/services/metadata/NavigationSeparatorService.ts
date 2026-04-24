@@ -38,6 +38,7 @@ import { TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../../types';
 import { ensureRecord, isBooleanRecordValue } from '../../utils/recordUtils';
 import { getDBInstanceOrNull } from '../../storage/fileOperations';
 import { getActivePropertyFields } from '../../utils/vaultProfiles';
+import { collectAllTagPaths } from '../../utils/tagTree';
 
 const FOLDER_PREFIX = 'folder:';
 const TAG_PREFIX = 'tag:';
@@ -210,7 +211,8 @@ export class NavigationSeparatorService extends BaseMetadataService {
         targetSettings: NotebookNavigatorSettings = this.settingsProvider.settings
     ): Promise<boolean> {
         const folderExists = (path: string) => validators.vaultFolders.has(path);
-        const tagExists = (path: string) => this.isVirtualTag(path) || validators.tagTree.has(path);
+        const tagLookup = this.collectValidatorTagPaths(validators.tagTree);
+        const tagExists = (path: string) => this.isVirtualTag(path) || tagLookup.has(path);
         const propertyExists = this.createPropertyNodeValidator(targetSettings, validators);
         const changed = await this.removeInvalidEntries(targetSettings, folderExists, tagExists, propertyExists ?? undefined);
         if (changed) {
@@ -349,6 +351,12 @@ export class NavigationSeparatorService extends BaseMetadataService {
             return null;
         }
         return new Set(provider.getAllTagPaths());
+    }
+
+    private collectValidatorTagPaths(tagTree: CleanupValidators['tagTree']): Set<string> {
+        const paths = new Set<string>();
+        tagTree.forEach(root => collectAllTagPaths(root, paths));
+        return paths;
     }
 
     private createPropertyNodeValidator(

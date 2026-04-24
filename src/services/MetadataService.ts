@@ -39,6 +39,7 @@ import { NavigatorContext } from '../types';
 import type { NavigationSeparatorTarget } from '../utils/navigationSeparators';
 import { buildPropertyKeyNodeId } from '../utils/propertyTree';
 import { casefold } from '../utils/recordUtils';
+import { buildTagTreeFromDatabase } from '../utils/tagTree';
 
 /**
  * Validators object containing all data needed for cleanup operations
@@ -81,7 +82,7 @@ export class MetadataService {
      * @param getPropertyTreeProvider - Function to get the property tree provider
      */
     constructor(
-        app: App,
+        private readonly app: App,
         settingsProvider: ISettingsProvider,
         getTagTreeProvider: () => ITagTreeProvider | null,
         getPropertyTreeProvider?: () => IPropertyTreeProvider | null
@@ -530,15 +531,8 @@ export class MetadataService {
      * @returns True if any changes were made
      */
     async cleanupAllMetadata(targetSettings: NotebookNavigatorSettings = this.settingsProvider.settings): Promise<boolean> {
-        const [folderChanges, tagChanges, propertyChanges, fileChanges, separatorChanges] = await Promise.all([
-            this.folderService.cleanupFolderMetadata(targetSettings),
-            this.tagService.cleanupTagMetadata(targetSettings),
-            this.propertyService.cleanupPropertyMetadata(targetSettings),
-            this.fileService.cleanupPinnedNotes(targetSettings),
-            this.navigationSeparatorService.cleanupSeparators(targetSettings)
-        ]);
-
-        return folderChanges || tagChanges || propertyChanges || fileChanges || separatorChanges;
+        const validators = MetadataService.prepareCleanupValidators(this.app);
+        return this.runUnifiedCleanup(validators, targetSettings);
     }
 
     /**
@@ -665,11 +659,12 @@ export class MetadataService {
     /**
      * Prepares validators for metadata cleanup by collecting current vault state
      * @param app - Obsidian app instance
-     * @param tagTree - Tag tree for tag metadata validation (empty Map if tags disabled)
+     * @param tagTree - Tag tree for tag metadata validation. When omitted, a vault-wide tree is built from cache data.
      * @returns Validators object for cleanup
      */
-    static prepareCleanupValidators(app: App, tagTree: Map<string, TagTreeNode> = new Map()): CleanupValidators {
+    static prepareCleanupValidators(app: App, tagTree?: Map<string, TagTreeNode>): CleanupValidators {
         const db = getDBInstance();
+        const cleanupTagTree = tagTree ?? buildTagTreeFromDatabase(db, undefined, undefined, [], true, false).tagTree;
 
         // Collect all files in vault
         const vaultFiles = new Set(app.vault.getFiles().map(f => f.path));
@@ -688,7 +683,7 @@ export class MetadataService {
 
         return {
             dbFiles: db.getAllFiles(),
-            tagTree,
+            tagTree: cleanupTagTree,
             vaultFiles,
             vaultFolders
         };
