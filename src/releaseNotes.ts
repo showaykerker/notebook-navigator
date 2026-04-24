@@ -82,7 +82,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         showOnUpdate: true,
         bannerUrl: true,
         new: [
-            '==Variable line height for title and preview text in list pane!== If you chooose 2 or more lines for title or preview, notes will now display without empty spacing.',
+            '==Variable line height for title and preview text in list pane!== If you chooose 2 or more lines for title or preview with less lines of content, notes will now display without empty spacing.',
             'New style setting: Calendar > ==Active day outline thickness==.',
             'New Setting: General > Homepage > ==Create note if missing==. When enabled, the daily, weekly, monthly, quarterly, or yearly note will be automatically created on startup if missing.'
         ],
