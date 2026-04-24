@@ -86,7 +86,10 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New style setting: Calendar > ==Active day outline thickness==.',
             'New Setting: General > Homepage > ==Create note if missing==. When enabled, the daily, weekly, monthly, quarterly, or yearly note will be automatically created on startup if missing.'
         ],
-        improved: ['Navigation tree now shows AND/OR icons when multiselecting tags and properties (command or shift + command).'],
+        improved: [
+            'Navigation tree now shows AND/OR icons when multiselecting tags and properties (command or shift + command).',
+            'You can now choose to display up to 3 title lines in the list pane.'
+        ],
         changed: ['Settings: ==General > Homepage== now includes yearly notes as an option.'],
         fixed: [
             'Fixed getting stuck in list pane in single pane mode when multi-selecting tags or properties in navigation pane.',
