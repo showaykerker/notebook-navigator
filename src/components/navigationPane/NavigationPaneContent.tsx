@@ -121,7 +121,7 @@ export const NavigationPane = React.memo(
         const uxPreferences = useUXPreferences();
         const uiState = useUIState();
         const uiDispatch = useUIDispatch();
-        const { fileData, getFileDisplayName, isStorageReady } = useFileCache();
+        const { fileData, getFileDisplayName, getFileTimestamps, isStorageReady } = useFileCache();
         const { startPointerDrag } = usePointerDrag();
         const {
             searchNavFilters,
@@ -777,7 +777,10 @@ export const NavigationPane = React.memo(
                 tagCounts,
                 propertyCounts,
                 vaultChangeVersion,
+                fileVisibility: activeProfile.fileVisibility,
+                hiddenFolders: activeProfile.hiddenFolders,
                 getFileDisplayName,
+                getFileTimestamps,
                 getSolidBackground,
                 shortcuts,
                 tree,
@@ -791,7 +794,10 @@ export const NavigationPane = React.memo(
                 firstInlineFolderPath,
                 firstSectionId,
                 folderCounts,
+                activeProfile.fileVisibility,
+                activeProfile.hiddenFolders,
                 getFileDisplayName,
+                getFileTimestamps,
                 getSolidBackground,
                 handleSectionContextMenu,
                 indentGuideLevelsByKey,

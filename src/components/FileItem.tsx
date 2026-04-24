@@ -54,6 +54,7 @@ import { openFileInContext } from '../utils/openFileInContext';
 import { FILE_VISIBILITY, getExtensionSuffix, shouldDisplayFile } from '../utils/fileTypeUtils';
 import { resolveFolderDecorationColors } from '../utils/folderDecoration';
 import { resolveFileDragIconId, resolveFileIconId } from '../utils/fileIconUtils';
+import { buildFileTooltip } from '../utils/navigationTooltipUtils';
 import {
     getFileItemLayoutState,
     isListPaneCompactMode,
@@ -794,39 +795,15 @@ export const FileItem = React.memo(function FileItem({
             return;
         }
 
-        // Format dates for tooltip with time
-        const dateTimeFormat = settings.timeFormat ? `${settings.dateFormat} ${settings.timeFormat}` : settings.dateFormat;
-        const timestamps = getFileTimestamps(file);
-        const createdDate = DateUtils.formatDate(timestamps.created, dateTimeFormat);
-        const modifiedDate = DateUtils.formatDate(timestamps.modified, dateTimeFormat);
-
-        // Check current sort to determine date order
-        const isCreatedSort = sortOption ? sortOption.startsWith('created-') : false;
-
-        // Build tooltip with filename and dates
-        const datesTooltip = isCreatedSort
-            ? `${strings.tooltips.createdAt} ${createdDate}\n${strings.tooltips.lastModifiedAt} ${modifiedDate}`
-            : `${strings.tooltips.lastModifiedAt} ${modifiedDate}\n${strings.tooltips.createdAt} ${createdDate}`;
-
-        // Always include a name at the top. When showing suffix, prefer the true filename (with extension)
-        const topLine = extensionSuffix.length > 0 ? file.name : displayName;
-
-        // Build tooltip content with multiple lines
-        const tooltipLines = [topLine];
-
-        // Include folder path in tooltip when enabled
-        if (settings.showTooltipPath) {
-            const parentPath = file.parent?.path ?? '/';
-            tooltipLines.push(parentPath);
-        }
-
-        if (unfinishedTaskTooltipText) {
-            tooltipLines.push(unfinishedTaskTooltipText);
-        }
-
-        // Add empty line separator and date information
-        tooltipLines.push('', datesTooltip);
-        const tooltip = tooltipLines.join('\n');
+        const tooltip = buildFileTooltip({
+            file,
+            displayName,
+            extensionSuffix,
+            settings,
+            getFileTimestamps,
+            sortOption,
+            unfinishedTaskTooltipText
+        });
 
         setTooltip(fileRef.current, tooltip, {
             placement: getTooltipPlacement()

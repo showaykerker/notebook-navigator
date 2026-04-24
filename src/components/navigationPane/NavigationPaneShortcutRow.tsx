@@ -27,6 +27,7 @@ import { resolveUXIcon } from '../../utils/uxIcons';
 import { getFolderNote } from '../../utils/folderNotes';
 import { getExtensionSuffix, shouldShowExtensionSuffix } from '../../utils/fileTypeUtils';
 import { getPathBaseName } from '../../utils/pathUtils';
+import { buildFileTooltip, buildFolderTooltip } from '../../utils/navigationTooltipUtils';
 import { ShortcutItem } from '../ShortcutItem';
 import type { NavigationPaneRowProps } from './NavigationPaneItemRenderer.types';
 
@@ -57,6 +58,7 @@ function SortableShortcutItem({ sortableId, canReorder, ...rest }: SortableShort
 
 export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowProps) {
     const { app, settings, showHiddenItems, getFileDisplayName, getSolidBackground, shortcuts } = context;
+    const shouldShowTooltip = !context.isMobile && settings.showTooltips;
 
     switch (item.type) {
         case NavigationPaneItemType.SHORTCUT_FOLDER: {
@@ -90,6 +92,18 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
                 canInteract && folder ? { type: 'folder', key: item.key, folder } : { type: 'missing', key: item.key, kind: 'folder' };
             const isDragSource = shortcuts.shouldUseShortcutDnd && shortcuts.activeShortcutId === item.key;
             const shortcutBackground = isMissing ? undefined : getSolidBackground(item.backgroundColor);
+            const tooltip =
+                canInteract && folder && shouldShowTooltip
+                    ? buildFolderTooltip({
+                          app,
+                          folder,
+                          displayName: folderLabel,
+                          fileVisibility: context.fileVisibility,
+                          hiddenFolders: context.hiddenFolders,
+                          settings,
+                          showHiddenItems
+                      })
+                    : undefined;
             const shortcutProps = {
                 icon: isMissing
                     ? 'lucide-alert-triangle'
@@ -104,6 +118,7 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
                 type: 'folder' as const,
                 countInfo: !isMissing ? folderCountInfo : undefined,
                 badge: shortcuts.shortcutNumberBadgesByKey.get(item.key),
+                tooltip,
                 forceShowCount: shortcuts.shouldShowShortcutCounts,
                 isExcluded: !isMissing ? item.isExcluded : undefined,
                 isDisabled: isMissing,
@@ -152,13 +167,13 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
             const isMissing = Boolean(item.isMissing);
             const canInteract = Boolean(note) && !isMissing;
             const notePath = isNoteShortcut(item.shortcut) ? item.shortcut.path : '';
+            const noteDisplayName = canInteract && note ? getFileDisplayName(note) : '';
+            const extensionSuffix = canInteract && note && shouldShowExtensionSuffix(note) ? getExtensionSuffix(note) : '';
             const defaultLabel = (() => {
                 if (!note || !canInteract) {
                     return shortcuts.getMissingNoteLabel(notePath);
                 }
-                const displayName = getFileDisplayName(note);
-                const extensionSuffix = shouldShowExtensionSuffix(note) ? getExtensionSuffix(note) : '';
-                return extensionSuffix ? `${displayName}${extensionSuffix}` : displayName;
+                return extensionSuffix ? `${noteDisplayName}${extensionSuffix}` : noteDisplayName;
             })();
             const noteAlias = isNoteShortcut(item.shortcut) ? item.shortcut.alias : undefined;
             const label = noteAlias && noteAlias.length > 0 ? noteAlias : defaultLabel;
@@ -166,6 +181,16 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
                 canInteract && note ? { type: 'note', key: item.key, file: note } : { type: 'missing', key: item.key, kind: 'note' };
             const isDragSource = shortcuts.shouldUseShortcutDnd && shortcuts.activeShortcutId === item.key;
             const shortcutBackground = isMissing ? undefined : getSolidBackground(item.backgroundColor);
+            const tooltip =
+                canInteract && note && shouldShowTooltip
+                    ? buildFileTooltip({
+                          file: note,
+                          displayName: noteDisplayName,
+                          extensionSuffix,
+                          settings,
+                          getFileTimestamps: context.getFileTimestamps
+                      })
+                    : undefined;
             const shortcutProps = {
                 icon: isMissing
                     ? 'lucide-alert-triangle'
@@ -179,6 +204,7 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
                 level: item.level,
                 type: 'note' as const,
                 badge: shortcuts.shortcutNumberBadgesByKey.get(item.key),
+                tooltip,
                 forceShowCount: shortcuts.shouldShowShortcutCounts,
                 isExcluded: !isMissing ? item.isExcluded : undefined,
                 isDisabled: isMissing,
@@ -367,6 +393,15 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
             const displayName = getFileDisplayName(note);
             const extensionSuffix = shouldShowExtensionSuffix(note) ? getExtensionSuffix(note) : '';
             const label = extensionSuffix ? `${displayName}${extensionSuffix}` : displayName;
+            const tooltip = shouldShowTooltip
+                ? buildFileTooltip({
+                      file: note,
+                      displayName,
+                      extensionSuffix,
+                      settings,
+                      getFileTimestamps: context.getFileTimestamps
+                  })
+                : undefined;
 
             return (
                 <ShortcutItem
@@ -374,6 +409,7 @@ export function NavigationPaneShortcutRow({ item, context }: NavigationPaneRowPr
                     color={item.color}
                     backgroundColor={getSolidBackground(item.backgroundColor)}
                     label={label}
+                    tooltip={tooltip}
                     level={item.level}
                     type="note"
                     onClick={() => shortcuts.handleRecentNoteActivate(note)}

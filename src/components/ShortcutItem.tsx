@@ -52,6 +52,7 @@ interface ShortcutItemProps {
     isDragSource?: boolean;
     dragHandleConfig?: DragHandleConfig;
     hasFolderNote?: boolean;
+    tooltip?: string;
     onLabelClick?: (event: React.MouseEvent<HTMLSpanElement>) => void;
     onLabelMouseDown?: (event: React.MouseEvent<HTMLSpanElement>) => void;
     dragRef?: (node: HTMLDivElement | null) => void;
@@ -88,6 +89,7 @@ export const ShortcutItem = React.memo(function ShortcutItem({
     isDragSource,
     dragHandleConfig,
     hasFolderNote,
+    tooltip,
     onLabelClick,
     onLabelMouseDown,
     dragRef,
@@ -205,6 +207,7 @@ export const ShortcutItem = React.memo(function ShortcutItem({
             ariaDisabled={shouldDisableRow || isMissing}
             dragHandleConfig={dragHandleConfig}
             labelClassName={hasFolderNote ? 'nn-has-folder-note' : undefined}
+            tooltip={tooltip}
             onLabelClick={labelClickHandler}
             onLabelMouseDown={labelMouseDownHandler}
             showIcon={shouldShowIcon}

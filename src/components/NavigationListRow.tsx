@@ -23,7 +23,8 @@ import { useSettingsState } from '../context/SettingsContext';
 import { getIconService, useIconServiceVersion } from '../services/icons';
 import type { ListReorderHandlers } from '../types/listReorder';
 import { ObsidianIcon } from './ObsidianIcon';
-import { setIcon } from 'obsidian';
+import { Platform, setIcon, setTooltip } from 'obsidian';
+import { getTooltipPlacement } from '../utils/domUtils';
 
 /**
  * Configuration for the drag handle element that appears in reorderable rows
@@ -73,6 +74,7 @@ interface NavigationListRowProps {
     onLabelMouseDown?: (event: React.MouseEvent<HTMLSpanElement>) => void;
     trailingAccessory?: React.ReactNode;
     showIcon?: boolean;
+    tooltip?: string;
     dragRef?: (node: HTMLDivElement | null) => void;
     dragHandleRef?: (node: HTMLSpanElement | null) => void;
     dragAttributes?: React.HTMLAttributes<HTMLElement>;
@@ -114,6 +116,7 @@ export function NavigationListRow({
     onLabelMouseDown,
     trailingAccessory,
     showIcon = true,
+    tooltip,
     dragRef,
     dragHandleRef,
     dragAttributes,
@@ -122,6 +125,7 @@ export function NavigationListRow({
     isSorting
 }: NavigationListRowProps) {
     const settings = useSettingsState();
+    const rowRef = useRef<HTMLDivElement | null>(null);
     const chevronRef = useRef<HTMLSpanElement>(null);
     const iconRef = useRef<HTMLSpanElement>(null);
     const iconVersion = useIconServiceVersion();
@@ -265,12 +269,29 @@ export function NavigationListRow({
 
     const setRowRef = useCallback(
         (node: HTMLDivElement | null) => {
+            rowRef.current = node;
             if (dragRef) {
                 dragRef(node);
             }
         },
         [dragRef]
     );
+
+    useEffect(() => {
+        const row = rowRef.current;
+        if (!row) {
+            return;
+        }
+
+        if (Platform.isMobile || !settings.showTooltips || !tooltip) {
+            setTooltip(row, '');
+            return;
+        }
+
+        setTooltip(row, tooltip, {
+            placement: getTooltipPlacement()
+        });
+    }, [settings.showTooltips, tooltip]);
 
     const setHandleRef = useCallback(
         (node: HTMLSpanElement | null) => {

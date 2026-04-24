@@ -82,7 +82,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         showOnUpdate: true,
         bannerUrl: true,
         new: [
-            '==Variable line height for title and preview text in list pane==. If you chooose 3 lines for title or preview, notes will display without spacing with variable lines.',
+            '==Variable line height for title and preview text in list pane!== If you chooose 2 or more lines for title or preview, notes will now display without empty spacing.',
             'New style setting: Calendar > ==Active day outline thickness==.',
             'New Setting: General > Homepage > ==Create note if missing==. When enabled, the daily, weekly, monthly, quarterly, or yearly note will be automatically created on startup if missing.'
         ],
@@ -91,7 +91,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         fixed: [
             'Fixed getting stuck in list pane in single pane mode when multi-selecting tags or properties in navigation pane.',
             'Date filters now parse years before year 1000 correctly.',
-            'Metadata cleanup now preserves metadata for hidden tags and nested tag separators.'
+            'Metadata cleanup now preserves metadata for hidden tags and nested tag separators.',
+            'Settings: General > Show tooltips now also works for shortcuts and recent files.'
         ]
     },
     {

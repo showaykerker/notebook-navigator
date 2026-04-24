@@ -19,6 +19,7 @@
 import React from 'react';
 import type { App, TFile } from 'obsidian';
 import type { NotebookNavigatorSettings } from '../../settings/types';
+import type { FileVisibility } from '../../utils/fileTypeUtils';
 import type { ExpansionAction } from '../../context/ExpansionContext';
 import type { SelectionState } from '../../context/SelectionContext';
 import type { NoteCountInfo } from '../../types/noteCounts';
@@ -53,7 +54,10 @@ export interface NavigationPaneRowContext {
     tagCounts: Map<string, NoteCountInfo>;
     propertyCounts: Map<string, NoteCountInfo>;
     vaultChangeVersion: number;
+    fileVisibility: FileVisibility;
+    hiddenFolders: string[];
     getFileDisplayName: (file: TFile) => string;
+    getFileTimestamps: (file: TFile) => { created: number; modified: number };
     getSolidBackground: (color?: string | null) => string | undefined;
     shortcuts: NavigationPaneShortcutRenderState;
     tree: NavigationPaneTreeInteractionsResult;
