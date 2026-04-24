@@ -223,4 +223,20 @@ describe('selectionReducer navigation history', () => {
         expect(clearedState.navigationHistory).toEqual(revealedState.navigationHistory);
         expect(clearedState.navigationHistoryIndex).toBe(revealedState.navigationHistoryIndex);
     });
+
+    it('ignores deleted-file cleanup when the deleted file is not selected', () => {
+        const root = createFolder('/');
+        const alpha = createFolder('Alpha', root);
+        const selectedFile = createFile('Alpha/selected.md', alpha);
+
+        const initialState = createSelectionState(root);
+        const selectedState = selectionReducer(initialState, { type: 'SET_SELECTED_FILE', file: selectedFile });
+        const cleanupState = selectionReducer(selectedState, {
+            type: 'CLEANUP_DELETED_FILE',
+            deletedPath: 'Alpha/deleted.md',
+            nextFileToSelect: null
+        });
+
+        expect(cleanupState).toBe(selectedState);
+    });
 });

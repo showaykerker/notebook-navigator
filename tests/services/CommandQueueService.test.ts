@@ -17,7 +17,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CommandQueueService } from '../../src/services/CommandQueueService';
+import { CommandQueueService, OperationType } from '../../src/services/CommandQueueService';
 import { createTestTFile } from '../utils/createTestTFile';
 
 function createDeferredVoid(): { promise: Promise<void>; resolve: () => void } {
@@ -78,5 +78,47 @@ describe('CommandQueueService', () => {
         await task;
 
         expect(commandQueue.isOpeningActiveFileInBackground(file.path)).toBe(false);
+    });
+
+    it('replays active operations to late operation listeners', async () => {
+        const commandQueue = new CommandQueueService();
+        const file = createTestTFile('notes/delete.md');
+        const deleteGate = createDeferredVoid();
+        const performDelete = vi.fn(async () => deleteGate.promise);
+        const listener = vi.fn();
+
+        const task = commandQueue.executeDeleteFiles([file], performDelete);
+        await Promise.resolve();
+
+        const unsubscribe = commandQueue.onOperationChange(listener);
+
+        expect(listener).toHaveBeenCalledWith(OperationType.DELETE_FILES, true);
+
+        deleteGate.resolve();
+        await task;
+
+        expect(listener).toHaveBeenCalledWith(OperationType.DELETE_FILES, false);
+
+        unsubscribe();
+    });
+
+    it('clears active operation snapshots', async () => {
+        const commandQueue = new CommandQueueService();
+        const file = createTestTFile('notes/delete.md');
+        const deleteGate = createDeferredVoid();
+        const performDelete = vi.fn(async () => deleteGate.promise);
+        const listener = vi.fn();
+
+        const task = commandQueue.executeDeleteFiles([file], performDelete);
+        await Promise.resolve();
+
+        commandQueue.clearAllOperations();
+        commandQueue.onOperationChange(listener);
+
+        expect(commandQueue.isDeletingFiles()).toBe(false);
+        expect(listener).not.toHaveBeenCalled();
+
+        deleteGate.resolve();
+        await task;
     });
 });

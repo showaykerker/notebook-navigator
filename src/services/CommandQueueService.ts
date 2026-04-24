@@ -164,19 +164,28 @@ export class CommandQueueService {
      */
     onOperationChange(listener: (type: OperationType, active: boolean) => void): () => void {
         this.listeners.add(listener);
+        this.activeCounts.forEach((count, type) => {
+            if (count > 0) {
+                this.notifyListener(listener, type, true);
+            }
+        });
         return () => {
             this.listeners.delete(listener);
         };
     }
 
+    private notifyListener(listener: (type: OperationType, active: boolean) => void, type: OperationType, active: boolean) {
+        try {
+            listener(type, active);
+        } catch (e) {
+            // Swallow listener errors to avoid breaking queue
+            console.error('CommandQueueService listener error:', e);
+        }
+    }
+
     private notify(type: OperationType, active: boolean) {
         this.listeners.forEach(l => {
-            try {
-                l(type, active);
-            } catch (e) {
-                // Swallow listener errors to avoid breaking queue
-                console.error('CommandQueueService listener error:', e);
-            }
+            this.notifyListener(l, type, active);
         });
     }
 
@@ -551,5 +560,6 @@ export class CommandQueueService {
      */
     clearAllOperations(): void {
         this.activeOperations.clear();
+        this.activeCounts.clear();
     }
 }

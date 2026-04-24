@@ -538,6 +538,11 @@ export function selectionReducer(state: SelectionState, action: SelectionAction,
             };
 
         case 'CLEANUP_DELETED_FILE': {
+            const deletedFileWasSelected = state.selectedFiles.has(action.deletedPath) || state.selectedFile?.path === action.deletedPath;
+            if (!deletedFileWasSelected && !action.nextFileToSelect) {
+                return state;
+            }
+
             const selectedFiles = new Set(state.selectedFiles);
             selectedFiles.delete(action.deletedPath);
 

@@ -106,9 +106,14 @@ export function useListPaneRefresh({
 
         const operationActiveRef = { current: false };
         const pendingRefreshRef = { current: false };
+        const isTrackedOperationActive = () =>
+            operationActiveRef.current ||
+            Boolean(
+                commandQueue?.hasActiveOperation(OperationType.MOVE_FILE) || commandQueue?.hasActiveOperation(OperationType.DELETE_FILES)
+            );
 
         const flushPendingWhenIdle = () => {
-            if (!pendingRefreshRef.current || operationActiveRef.current) {
+            if (!pendingRefreshRef.current || isTrackedOperationActive()) {
                 return;
             }
 
@@ -117,7 +122,7 @@ export function useListPaneRefresh({
         };
 
         const queueRefresh = () => {
-            if (operationActiveRef.current) {
+            if (isTrackedOperationActive()) {
                 pendingRefreshRef.current = true;
                 return;
             }
