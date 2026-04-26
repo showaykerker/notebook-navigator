@@ -77,6 +77,14 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.6.3',
+        date: '2026-04-26',
+        showOnUpdate: false,
+        new: [
+            'New setting: **Folder note patterns** — comma-separated glob patterns (e.g. "00 - *.md, index.md") matched in order to detect folder notes. Supports * and ?. Checked before Folder note name.'
+        ]
+    },
+    {
         version: '2.6.2',
         date: '2026-04-25',
         showOnUpdate: false,
