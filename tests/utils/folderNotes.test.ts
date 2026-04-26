@@ -40,11 +40,11 @@ function makeSettings(overrides: Partial<FolderNoteDetectionSettings> = {}): Fol
  * `getFolderNote` uses for the exact-name resolution fallback.
  */
 function makeFolder(folderPath: string, childPaths: string[]): TFolder {
-    const folder = new TFolder(folderPath);
+    const folder = new (TFolder as unknown as new (path: string) => TFolder)(folderPath);
     (folder as unknown as { name: string }).name = folderPath.split('/').pop() ?? '';
 
     const files: TFile[] = childPaths.map(fp => {
-        const file = new TFile(fp);
+        const file = new (TFile as unknown as new (path: string) => TFile)(fp);
         (file as unknown as { parent: TFolder }).parent = folder;
         return file;
     });
@@ -125,7 +125,7 @@ describe('getFolderNote — folderNotePatterns', () => {
 
     it('ignores files from a different parent folder', () => {
         const folder = makeFolder('Projects', []);
-        const alien = new TFile('Other/index.md');
+        const alien = new (TFile as unknown as new (path: string) => TFile)('Other/index.md');
         (alien as unknown as { parent: { path: string } }).parent = { path: 'Other' };
         (folder as unknown as { children: TFile[] }).children = [alien];
         const result = getFolderNote(folder, makeSettings({ folderNotePatterns: ['*.md'] }));
@@ -211,7 +211,7 @@ describe('isFolderNote — pattern-aware', () => {
 
     it('returns false for a file in a different folder', () => {
         const folder = makeFolder('Projects', ['Projects/index.md']);
-        const alien = new TFile('Other/index.md');
+        const alien = new (TFile as unknown as new (path: string) => TFile)('Other/index.md');
         (alien as unknown as { parent: { path: string } }).parent = { path: 'Other' };
         const settings = makeSettings({ folderNotePatterns: ['*.md'] });
         expect(isFolderNote(alien, folder, settings)).toBe(false);
