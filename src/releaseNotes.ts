@@ -77,7 +77,7 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
-        version: '2.6.3',
+        version: '2.6.2-fork.1',
         date: '2026-04-26',
         showOnUpdate: false,
         new: [
