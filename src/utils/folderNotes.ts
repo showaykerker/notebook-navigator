@@ -230,6 +230,13 @@ export function isFolderNote(file: TFile, folder: TFolder, settings: FolderNoteD
         return false;
     }
 
+    // When patterns are configured, delegate entirely to getFolderNote so
+    // pattern priority is consistent with the detection path.
+    if (settings.folderNotePatterns.length > 0) {
+        const preferred = getFolderNote(folder, settings);
+        return preferred?.path === file.path;
+    }
+
     const expectedName = resolveFolderNoteName(folder.name, settings);
     if (file.basename === expectedName) {
         return true;
