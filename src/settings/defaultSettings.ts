@@ -256,6 +256,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     folderNoteType: 'markdown',
     folderNoteName: '',
     folderNoteNamePattern: '',
+    folderNotePatterns: [],
     folderNoteTemplate: null,
     enableFolderNoteLinks: true,
     hideFolderNoteInList: true,

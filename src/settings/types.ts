@@ -436,6 +436,7 @@ export interface NotebookNavigatorSettings {
     folderNoteType: FolderNoteCreationPreference;
     folderNoteName: string;
     folderNoteNamePattern: string;
+    folderNotePatterns: string[];
     folderNoteTemplate: string | null;
     enableFolderNoteLinks: boolean;
     hideFolderNoteInList: boolean;

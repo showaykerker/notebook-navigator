@@ -132,7 +132,8 @@ export function ListPaneHeader({
         return getFolderNote(selectedFolder, {
             enableFolderNotes: settings.enableFolderNotes,
             folderNoteName: settings.folderNoteName,
-            folderNoteNamePattern: settings.folderNoteNamePattern
+            folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: settings.folderNotePatterns
         });
     }, [
         selectedFolder,
@@ -140,6 +141,7 @@ export function ListPaneHeader({
         settings.enableFolderNoteLinks,
         settings.folderNoteName,
         settings.folderNoteNamePattern,
+        settings.folderNotePatterns,
         shouldResolveSelectedFolderNote,
         selectedFolderFileVersion
     ]);

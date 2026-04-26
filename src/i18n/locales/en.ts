@@ -1907,6 +1907,11 @@ export const STRINGS_EN = {
                 name: 'Folder note name pattern',
                 desc: 'Name pattern for folder notes without extension. Use {{folder}} to insert the folder name. When set, Folder note name does not apply.'
             },
+            folderNotePatterns: {
+                name: 'Folder note patterns',
+                desc: 'Comma-separated glob patterns matched in order to find the folder note (e.g. "00 - *.md, index.md"). Checked before name and name pattern above. Supports * and ?.',
+                placeholder: '00 - *.md, index.md, README.md'
+            },
             folderNoteTemplate: {
                 name: 'Folder note template',
                 desc: 'Template file for new markdown folder notes. Set template folder location in General > Templates.'
