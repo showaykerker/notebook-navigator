@@ -246,7 +246,8 @@ export function useNavigationNoteCounts(params: UseNavigationNoteCountsParams): 
         const folderNoteSettings = getFolderNoteDetectionSettings({
             enableFolderNotes: settings.enableFolderNotes,
             folderNoteName: settings.folderNoteName,
-            folderNoteNamePattern: settings.folderNoteNamePattern
+            folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: settings.folderNotePatterns
         });
         const includeDescendants = includeDescendantNotes;
         const showHiddenFolders = showHiddenItems;
@@ -286,6 +287,7 @@ export function useNavigationNoteCounts(params: UseNavigationNoteCountsParams): 
         settings.enableFolderNotes,
         settings.folderNoteName,
         settings.folderNoteNamePattern,
+        settings.folderNotePatterns,
         settings.hideFolderNoteInList,
         settings.showNoteCount,
         showHiddenItems,

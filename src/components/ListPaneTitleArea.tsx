@@ -55,7 +55,8 @@ export function ListPaneTitleArea({ desktopTitle }: ListPaneTitleAreaProps) {
         return getFolderNote(selectedFolder, {
             enableFolderNotes: settings.enableFolderNotes,
             folderNoteName: settings.folderNoteName,
-            folderNoteNamePattern: settings.folderNoteNamePattern
+            folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: settings.folderNotePatterns
         });
     }, [
         selectedFolder,
@@ -63,6 +64,7 @@ export function ListPaneTitleArea({ desktopTitle }: ListPaneTitleAreaProps) {
         settings.enableFolderNoteLinks,
         settings.folderNoteName,
         settings.folderNoteNamePattern,
+        settings.folderNotePatterns,
         selectedFolderFileVersion
     ]);
 
