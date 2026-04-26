@@ -73,6 +73,7 @@ export class FolderDisplayCache {
             this.settingsSnapshot.inheritFolderColors !== snapshot.inheritFolderColors ||
             this.settingsSnapshot.folderNoteName !== snapshot.folderNoteName ||
             this.settingsSnapshot.folderNoteNamePattern !== snapshot.folderNoteNamePattern ||
+            this.settingsSnapshot.folderNotePatterns.join(',') !== snapshot.folderNotePatterns.join(',') ||
             this.settingsSnapshot.frontmatterNameField !== snapshot.frontmatterNameField ||
             this.settingsSnapshot.frontmatterIconField !== snapshot.frontmatterIconField ||
             this.settingsSnapshot.frontmatterColorField !== snapshot.frontmatterColorField ||
@@ -90,6 +91,7 @@ export class FolderDisplayCache {
             this.settingsSnapshot.enableFolderNotes !== snapshot.enableFolderNotes ||
             this.settingsSnapshot.folderNoteName !== snapshot.folderNoteName ||
             this.settingsSnapshot.folderNoteNamePattern !== snapshot.folderNoteNamePattern ||
+            this.settingsSnapshot.folderNotePatterns.join(',') !== snapshot.folderNotePatterns.join(',') ||
             this.settingsSnapshot.frontmatterNameField !== snapshot.frontmatterNameField
         );
     }

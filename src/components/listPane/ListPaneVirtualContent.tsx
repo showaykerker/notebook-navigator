@@ -203,7 +203,8 @@ export function ListPaneVirtualContent({
                     ? getFolderNote(folder, {
                           enableFolderNotes: settings.enableFolderNotes,
                           folderNoteName: settings.folderNoteName,
-                          folderNoteNamePattern: settings.folderNoteNamePattern
+                          folderNoteNamePattern: settings.folderNoteNamePattern,
+                          folderNotePatterns: settings.folderNotePatterns
                       })
                     : null;
 
@@ -217,7 +218,8 @@ export function ListPaneVirtualContent({
         settings.enableFolderNoteLinks,
         settings.enableFolderNotes,
         settings.folderNoteName,
-        settings.folderNoteNamePattern
+        settings.folderNoteNamePattern,
+        settings.folderNotePatterns
     ]);
 
     const handleFolderGroupHeaderClick = useCallback(

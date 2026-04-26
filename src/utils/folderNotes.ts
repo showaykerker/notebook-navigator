@@ -41,6 +41,19 @@ interface OpenFolderNoteFileParams {
  */
 export interface FolderNoteDetectionSettings extends FolderNoteNameSettings {
     enableFolderNotes: boolean;
+    folderNotePatterns: string[];
+}
+
+/**
+ * Tests whether a file matches a glob pattern.
+ * Supports * (any characters) and ? (single character), case-insensitive.
+ * Matches against the full filename when the pattern contains a dot, otherwise against the basename.
+ */
+function matchGlob(pattern: string, file: TFile): boolean {
+    const subject = pattern.includes('.') ? file.name : file.basename;
+    const escaped = pattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+    const regexStr = escaped.replace(/\*/g, '.*').replace(/\?/g, '.');
+    return new RegExp(`^${regexStr}$`, 'i').test(subject);
 }
 
 /**
@@ -62,7 +75,8 @@ export function getFolderNoteDetectionSettings(settings: FolderNoteDetectionSett
     return {
         enableFolderNotes: settings.enableFolderNotes,
         folderNoteName: settings.folderNoteName,
-        folderNoteNamePattern: settings.folderNoteNamePattern
+        folderNoteNamePattern: settings.folderNoteNamePattern,
+        folderNotePatterns: settings.folderNotePatterns
     };
 }
 
@@ -87,6 +101,22 @@ export function isSupportedFolderNoteExtension(extension: string): boolean {
 export function getFolderNote(folder: TFolder, settings: FolderNoteDetectionSettings): TFile | null {
     if (!settings.enableFolderNotes) {
         return null;
+    }
+
+    // Try each glob pattern in order before falling back to exact-name resolution.
+    if (settings.folderNotePatterns.length > 0) {
+        const candidates = folder.children.filter(
+            (child): child is TFile =>
+                child instanceof TFile &&
+                child.parent?.path === folder.path &&
+                SUPPORTED_FOLDER_NOTE_EXTENSIONS.has(child.extension)
+        );
+        for (const pattern of settings.folderNotePatterns) {
+            const match = candidates.find(f => matchGlob(pattern, f));
+            if (match) {
+                return match;
+            }
+        }
     }
 
     const expectedName = resolveFolderNoteName(folder.name, settings);
@@ -200,6 +230,13 @@ export function isFolderNote(file: TFile, folder: TFolder, settings: FolderNoteD
         return false;
     }
 
+    // When patterns are configured, delegate entirely to getFolderNote so
+    // pattern priority is consistent with the detection path.
+    if (settings.folderNotePatterns.length > 0) {
+        const preferred = getFolderNote(folder, settings);
+        return preferred?.path === file.path;
+    }
+
     const expectedName = resolveFolderNoteName(folder.name, settings);
     if (file.basename === expectedName) {
         return true;
@@ -235,7 +272,8 @@ export async function createFolderNote(
         getFolderNoteDetectionSettings({
             enableFolderNotes: true,
             folderNoteName: settings.folderNoteName,
-            folderNoteNamePattern: settings.folderNoteNamePattern
+            folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: []
         })
     );
 

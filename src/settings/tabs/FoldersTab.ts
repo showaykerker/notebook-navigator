@@ -27,6 +27,7 @@ import { wireToggleSettingWithSubSettings } from '../subSettings';
 import { FilePathInputSuggest } from '../../suggest/FilePathInputSuggest';
 import { FOLDER_NOTE_NAME_PATTERN_PLACEHOLDER } from '../../utils/folderNoteName';
 import { normalizeOptionalVaultFilePath } from '../../utils/pathUtils';
+import { formatCommaSeparatedList, parseCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
 
 /** Renders the folders settings tab */
 export function renderFoldersTab(context: SettingsTabContext): void {
@@ -136,6 +137,17 @@ export function renderFoldersTab(context: SettingsTabContext): void {
         () => plugin.settings.folderNoteNamePattern,
         value => {
             plugin.settings.folderNoteNamePattern = value;
+        }
+    );
+
+    context.createDebouncedTextSetting(
+        folderNotesSettingsEl,
+        strings.settings.items.folderNotePatterns.name,
+        strings.settings.items.folderNotePatterns.desc,
+        strings.settings.items.folderNotePatterns.placeholder,
+        () => formatCommaSeparatedList(plugin.settings.folderNotePatterns),
+        value => {
+            plugin.settings.folderNotePatterns = parseCommaSeparatedList(value);
         }
     );
 

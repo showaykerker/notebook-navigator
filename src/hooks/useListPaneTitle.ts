@@ -115,7 +115,8 @@ export function useListPaneTitle(): UseListPaneTitleResult {
 
         const folderNoteNameSettings = {
             folderNoteName: settings.folderNoteName,
-            folderNoteNamePattern: settings.folderNoteNamePattern
+            folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: settings.folderNotePatterns
         };
 
         const targets = new Set<string>();
@@ -139,7 +140,8 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         selectionState.selectionType,
         settings.enableFolderNotes,
         settings.folderNoteName,
-        settings.folderNoteNamePattern
+        settings.folderNoteNamePattern,
+        settings.folderNotePatterns
     ]);
 
     useEffect(() => {
@@ -204,6 +206,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
             enableFolderNotes: settings.enableFolderNotes,
             folderNoteName: settings.folderNoteName,
             folderNoteNamePattern: settings.folderNoteNamePattern,
+            folderNotePatterns: settings.folderNotePatterns,
             useFrontmatterMetadata: settings.useFrontmatterMetadata,
             frontmatterNameField: settings.frontmatterNameField
         });
